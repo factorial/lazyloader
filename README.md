@@ -24,7 +24,7 @@ The simplest way to use LazyLoader is like this:
     jQuery().ready(LazyLoader(loadFn));
 
 Done this way, whenever a user finishes scrolling or resizing the browser,
-LazyLoader will execute the loadFn() function once for each element with a
+LazyLoader will execute the loadFn() function once for each div with a
 `data-lazyload` attribute set that is within the viewport.
 
 #### Load function parameters
@@ -40,6 +40,7 @@ The load function is called with one parameter:
 You may find need for some of the options available to the LazyLoader() constructor.
 Here are the constructor interface and default option values:
 
+#### LazyLoader constructor parameters
     LazyLoader ll = LazyLoader(loadFn, options);
 
     options = {
