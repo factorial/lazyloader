@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+    <head>
+        <style>
+            div { height: 300px; width: 400px; border: solid 2px #000; margin: 10px; overflow:scroll; position: relative; left: 000px;}
+            h1 { font-size: 72px; font-weight: bold; }
+            #div5 { position:absolute; left: 1000px; }
+        </style>
+    </head>
+    <body>
+        <div data-lazyload data-lazyurl='div1.html' id='div1' ></div>
+        <div data-lazyload data-lazyurl='div2.html' id='div2' ></div>
+        <div data-lazyload data-lazyurl='div3.html' id='div3' ></div>
+        <div data-lazyload data-lazyurl='div4.html' id='div4' ></div>
+        <div data-lazyload data-lazyurl='div5.html' id='div5' ></div>
+        <div data-lazyload data-lazyurl='div6.html' id='div6' ></div>
+        <div data-lazyload data-lazyurl='div7.html' id='div7' ></div>
+        <div data-lazyload data-lazyurl='div8.html' id='div8' ></div>
+        <div data-lazyload data-lazyurl='div9.html' id='div9' ></div>
+    </body>
+
+    <script src='jquery-1.9.1.min.js'></script>
+    <script src='LazyLoader-0.0.1-min.js'></script>
+    <script>
+        function loadFn(params) {
+            var targetEl = params.el;
+            $.ajax({ url: (params.el.data('lazyurl')) })
+             .done(function (data) {
+                targetEl.html(data);
+                targetEl.css('background-color', '#32DB41');
+            });
+        }
+
+        $().ready(LazyLoader(loadFn));
+    </script>
+</html>
