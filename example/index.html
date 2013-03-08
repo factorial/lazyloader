@@ -14,14 +14,15 @@
         <div data-lazyload data-lazyurl='div4.html' id='div4' ></div>
         <div data-lazyload data-lazyurl='div5.html' id='div5' ></div>
         <div data-lazyload data-lazyurl='div6.html' id='div6' ></div>
-        <div data-lazyload data-lazyurl='div7.html' id='div7' ></div>
+        <div class='foo' id='div7' ></div>
         <div data-lazyload data-lazyurl='div8.html' id='div8' ></div>
         <div data-lazyload data-lazyurl='div9.html' id='div9' ></div>
     </body>
 
     <script src='jquery-1.9.1.min.js'></script>
-    <script src='LazyLoader-0.0.1-min.js'></script>
+    <script src='LazyLoader.js'></script>
     <script>
+    $().ready(function() {
         function loadFn(params) {
             var targetEl = params.el;
             $.ajax({ url: (params.el.data('lazyurl')) })
@@ -31,6 +32,14 @@
             });
         }
 
-        $().ready(LazyLoader(loadFn));
+        function loadFn2(params) {
+            var targetEl = params.el;
+            targetEl.html("This div has a different loader.");
+            targetEl.css('background-color', '#ffDB41');
+        }
+
+        LazyLoader(loadFn2, {'selector': 'div.foo'});
+        LazyLoader(loadFn);
+    });
     </script>
 </html>

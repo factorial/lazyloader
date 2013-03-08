@@ -1,40 +1,13 @@
-/*
-   LazyLoader
-   a stupidly simple lazy loader for the web
-   https://github.com/factorial/LazyLoader
+/*jslint browser: true*/
+/*globals jQuery */
 
-   Licensed under the MIT License (http://opensource.org/licenses/MIT)
-   -----
-
-   Usage:
-        <script src='jquery.js'></script>
-        function loadFn(params) { ... }
-        jQuery().ready(LazyLoader(loadFn));
-
-   Constructor Parameters:
-   param 1 - loadCallback:
-       the callback function that will be called to "load" the element.
-       it can actually do anything you want to be done when the element
-       enters the viewport - load a template, launch a rocket, whatever.
-
-       loadCallback will be passed a single parameters object:
-       {
-       "el": <the element entering the viewport. a jquery object.>
-       }
-
-   param 2 - optionOverride:
-       optional options that are optional
-       (for changing things from their default behavior)
-
-       options are specified in a JSON object. look below at the
-       options initial variable definition for the available options and
-       their default values.
- */
-
-window.LazyLoader = function(loadCallback, optionOverride) {
-    var lazyLoader = {},
+window.LazyLoader = function (loadCallback, optionOverride) {
+    'use strict';
+    var fnElIsVisible,
+        fnDelay,
+        fnLoadVisibleEls,
+        lazyLoader = {},
         elsToLazyLoad = [], /* I like to say "el" for "element" everywhere. */
-        i,
         delayTimeout,
         handleEvents = true,
         options = {
@@ -47,16 +20,19 @@ window.LazyLoader = function(loadCallback, optionOverride) {
         };
 
     /* PRIVATE */
+    /* ******* */
     if (optionOverride) {
         options.selector        = optionOverride.selector        || options.selector;
-        options.threshold.x     = optionOverride.threshold.x     || options.threshold.x;
-        options.threshold.y     = optionOverride.threshold.y     || options.threshold.y;
+        if (optionOverride.threshold) {
+            options.threshold.x     = optionOverride.threshold.x     || options.threshold.x;
+            options.threshold.y     = optionOverride.threshold.y     || options.threshold.y;
+        }
     }
 
-    /* bool elIsVisible(el) - return whether element is within viewport + threshold */
-    elIsVisible = function(el) {
-        var el = jQuery(el),
-            win = jQuery(window);
+    /* bool fnElIsVisible(el) - return whether element is within viewport + threshold */
+    fnElIsVisible = function (el) {
+        el = jQuery(el);
+        var win = jQuery(window),
 
             elTop = el.offset().top,
             elLeft = el.offset().left,
@@ -64,7 +40,7 @@ window.LazyLoader = function(loadCallback, optionOverride) {
             elRight = el.offset().left + el.width(),
 
             /* The options.threshold lets you define a bigger area within which to start
-             * loading an element.
+               loading an element.
              */
             viewportCoords = {
                 top: win.scrollTop() + options.threshold.y,
@@ -74,32 +50,30 @@ window.LazyLoader = function(loadCallback, optionOverride) {
             };
 
         /* Return true if the top OR bottom edge of the element is visible AND
-         *                the left OR right edge of the element is visible.
+           the left OR right edge of the element is visible.
          */
         return ((elTop < viewportCoords.bot && elTop > viewportCoords.top) || (elBot < viewportCoords.bot && elBot > viewportCoords.top)) &&
                ((elLeft < viewportCoords.right && elLeft > viewportCoords.left) || (elRight < viewportCoords.right && elRight > viewportCoords.left));
-    }
+    };
 
-    /* Delay executing a function until it hasn't been called for <ms> milliseconds */
-    delay = function(callback, ms, timeoutObj) {
+    /* void fnDelay(callback, ms) - delay executing a callback function until it hasn't been called for <ms> milliseconds */
+    fnDelay = function (callback, ms) {
         /* some reasonable defaults, uses private variable delayTimeout as default timeout object */
-        var ms = ms || 100,
-            timeoutObj = timeoutObj || delayTimeout;
+        ms = ms || 100;
         window.clearTimeout(delayTimeout);
-        delayTimeout = window.setTimeout(callback, ms);
-    }
+        delayTimeout = window.setTimeout(callback, 100);
+    };
 
     /* This is the main function, which will be attached to the window onscroll and onresize events */
-    loadVisibleEls = function() {
+    fnLoadVisibleEls = function () {
         /* First, manage the lock for executing this handler */
         if (!handleEvents) { return; }
-        else { handleEvents = false; }
+        handleEvents = false;
 
-        var elIndexesLoaded = [],
-            callbackParam = {};
+        var callbackParam = {};
 
-        elsToLazyLoad.each(function(index) {
-            if (elsToLazyLoad[index] && elIsVisible(this)) {
+        elsToLazyLoad.each(function (index) {
+            if (elsToLazyLoad[index] && fnElIsVisible(this)) {
                 callbackParam.el = jQuery(this);
                 lazyLoader.loadCallback(callbackParam);
 
@@ -109,11 +83,13 @@ window.LazyLoader = function(loadCallback, optionOverride) {
         });
 
         /* Set handleEvents back to true after <lockTime> ms */
-        window.setTimeout(function() { handleEvents = true; }, options.lockTime);
+        window.setTimeout(function () { handleEvents = true; }, options.lockTime);
     };
 
 
     /* PUBLIC */
+    /* ****** */
+
     /* Hey look, you can change the load callback at run time! */
     lazyLoader.loadCallback = loadCallback;
 
@@ -122,11 +98,12 @@ window.LazyLoader = function(loadCallback, optionOverride) {
     elsToLazyLoad = jQuery(options.selector);
 
     /* Attach event handlers */
-    /* We delay execution of handlers until the user has stopped scrolling/resizing entirely. See delay(), defined above */
-    jQuery(window).scroll(function() { delay(loadVisibleEls) });
-    jQuery(window).resize(function() { delay(loadVisibleEls) });
+    /* We delay execution of handlers until the user has stopped scrolling/resizing entirely. See fnDelay(), defined above */
+    jQuery(window).scroll(function () { fnDelay(fnLoadVisibleEls); });
+    jQuery(window).resize(function () { fnDelay(fnLoadVisibleEls); });
 
     /* Go ahead and call the event handler on instantiation */
-    loadVisibleEls();
+    window.setTimeout(fnLoadVisibleEls, 1);
     return lazyLoader;
 };
+
