@@ -1,1 +1,1 @@
-../src/LazyLoader.js
+../src/lazyloader.js

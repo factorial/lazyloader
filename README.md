@@ -6,30 +6,36 @@ A stupidly simple JavaScript lazy loader for the web.
 LazyLoader just needs jQuery. I wrote it using 1.9.1, so aim for that.
 
 ## Browser support
-So far I've tested it in Chrome and IE 9 and it seems to be working.
-Other browsers, performance info, etc. are forthcoming.
+So far I've tested it in Chrome, IE 9, and a few mobile browsers like
+IOS Safari and it seems to be working. Other browsers, performance info, etc. are forthcoming.
 
 ## Usage
 ### We can do this the easy way...
 
 The simplest way to use LazyLoader is like this:
 
-    <!-- 1. Include your jQuery script -->
+    <!-- 1. Include your jQuery script and LazyLoader script -->
     <script src='jquery.js'></script>
+    <script src='lazyloader.js'></script>
 
     <!-- 2. Define the function that "loads" an element -->
     function loadFn(params) { ... }
 
     <!-- 3. Instantiate the LazyLoader class with that load function -->
-    jQuery().ready(LazyLoader(loadFn));
+    jQuery().ready(function() { LazyLoader(loadFn); });
 
 Done this way, whenever a user finishes scrolling or resizing the browser,
 LazyLoader will execute the loadFn() function once for each div with a
-`data-lazyload` attribute set that is within the viewport.
+`data-lazyload` attribute that is within the viewport.
+
+If you need to lazy load some elements of your page differently than other
+lazy loading elements, you can create multiple instances of LazyLoader, each
+with its own load function and selector. See the example in this package
+and/or the constructor documentation below for more info on that.
 
 #### Load function parameters
 
-The load function is called with one parameter:
+The load function gets one parameter:
 
     params = {
         el: <the jQuery object for the element to be loaded>

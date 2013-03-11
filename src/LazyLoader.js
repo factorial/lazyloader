@@ -1,6 +1,5 @@
 /*jslint browser: true*/
 /*globals jQuery */
-
 window.LazyLoader = function (loadCallback, optionOverride) {
     'use strict';
     var fnElIsVisible,

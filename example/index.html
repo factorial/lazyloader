@@ -20,7 +20,7 @@
     </body>
 
     <script src='jquery-1.9.1.min.js'></script>
-    <script src='LazyLoader.js'></script>
+    <script src='lazyloader.js'></script>
     <script>
     $().ready(function() {
         function loadFn(params) {
@@ -38,8 +38,8 @@
             targetEl.css('background-color', '#ffDB41');
         }
 
-        LazyLoader(loadFn2, {'selector': 'div.foo'});
-        LazyLoader(loadFn);
+        window.LazyLoader(loadFn2, {'selector': 'div.foo'});
+        window.LazyLoader(loadFn);
     });
     </script>
 </html>
