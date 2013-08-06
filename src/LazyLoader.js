@@ -1,4 +1,4 @@
-/*jslint browser: true*/
+/*jshint browser: true */
 /*globals jQuery */
 window.LazyLoader = function (loadCallback, optionOverride) {
     'use strict';
@@ -42,17 +42,17 @@ window.LazyLoader = function (loadCallback, optionOverride) {
                loading an element.
              */
             viewportCoords = {
-                top: win.scrollTop() + options.threshold.y,
+                top: win.scrollTop() - options.threshold.y,
                 bot: win.height() + win.scrollTop() + options.threshold.y,
-                left: win.scrollLeft() + options.threshold.x,
+                left: win.scrollLeft() - options.threshold.x,
                 right: win.width() + win.scrollLeft() + options.threshold.x
             };
 
         /* Return true if the top OR bottom edge of the element is visible AND
            the left OR right edge of the element is visible.
          */
-        return ((elTop < viewportCoords.bot && elTop > viewportCoords.top) || (elBot < viewportCoords.bot && elBot > viewportCoords.top)) &&
-               ((elLeft < viewportCoords.right && elLeft > viewportCoords.left) || (elRight < viewportCoords.right && elRight > viewportCoords.left));
+        return ((elTop <= viewportCoords.bot && elTop >= viewportCoords.top) || (elBot <= viewportCoords.bot && elBot >= viewportCoords.top)) &&
+               ((elLeft <= viewportCoords.right && elLeft >= viewportCoords.left) || (elRight <= viewportCoords.right && elRight >= viewportCoords.left));
     };
 
     /* void fnDelay(callback, ms) - delay executing a callback function until it hasn't been called for <ms> milliseconds */
